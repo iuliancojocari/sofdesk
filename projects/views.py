@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from .models import Project, Contributor, Issue
 from .serializers import ProjectSerializer, ContributorSerializer, IssueSerializer
-from .permissions import ProjectPermissions, ContributorPermissions
+from .permissions import ProjectPermissions, ContributorPermissions, IssuePermissions
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -50,12 +50,12 @@ class ContributorViewSet(viewsets.ModelViewSet):
 
 class IssueViewSet(viewsets.ModelViewSet):
     serializer_class = IssueSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IssuePermissions]
     http_method_names = ["get", "post", "put", "delete"]
 
     def get_queryset(self):
         self.project = get_object_or_404(Project, id=self.kwargs["project_pk"])
-        return Issue.objects.all().filter(project=self.project)
+        return Issue.objects.filter(project=self.project)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

@@ -1,7 +1,7 @@
 from rest_framework import permissions
 from rest_framework.generics import get_object_or_404
 
-from .models import Project
+from .models import Project, Issue
 
 
 class ProjectPermissions(permissions.BasePermission):
@@ -28,4 +28,10 @@ class ContributorPermissions(permissions.BasePermission):
     
 
 class IssuePermissions(permissions.BasePermission):
-    pass
+    def has_object_permission(self, request, view, obj):
+        project = get_object_or_404(Project, id=view.kwargs["project_pk"])
+        try:
+            issue = get_object_or_404(Issue, id=view.kwargs["issue_pk"])
+            return request.user == issue.author
+        except KeyError:
+            return project in Project.objects.filter(contributor_project__user=request.user)
