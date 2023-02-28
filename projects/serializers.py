@@ -90,5 +90,3 @@ class CommentSerializer(serializers.ModelSerializer):
         )
         comment.save()
         return comment
-
-    # to do -> destroy method

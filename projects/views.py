@@ -103,3 +103,5 @@ class CommentViewSet(viewsets.ModelViewSet):
         context = super().get_serializer_context()
         context["issue"] = self.issue
         return context
+
+    # to do -> destroy method
