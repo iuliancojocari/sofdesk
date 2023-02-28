@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Project, Contributor, Issue
+from .models import Project, Contributor, Issue, Comment
 from users.models import User
 
 
@@ -48,7 +48,7 @@ class ContributorSerializer(serializers.ModelSerializer):
                 contributor.save()
                 return contributor
             except User.DoesNotExist:
-                raise serializers.ValidationError({"message": "User not found !"})
+                raise serializers.ValidationError({"detail": "User not found !"})
 
 
 class IssueSerializer(serializers.ModelSerializer):
@@ -64,7 +64,7 @@ class IssueSerializer(serializers.ModelSerializer):
             )
             try:
                 issue = Issue.objects.create(
-                    project=self.context["project"],  # get_serializer_context
+                    project=self.context["project"],
                     author=self.context["request"].user,
                     **validated_data
                 )
@@ -74,3 +74,21 @@ class IssueSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({"detail": "User not found !"})
         except Contributor.DoesNotExist:
             raise serializers.ValidationError({"detail": "Contributor not found !"})
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = "__all__"
+        read_only_fields = ("id", "author", "issue", "created_at")
+
+    def create(self, validated_data):
+        comment = Comment.objects.create(
+            description=validated_data["description"],
+            author=self.context["request"].user,
+            issue=self.context["issue"],
+        )
+        comment.save()
+        return comment
+
+    # to do -> destroy method

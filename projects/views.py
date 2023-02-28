@@ -3,9 +3,19 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from .models import Project, Contributor, Issue
-from .serializers import ProjectSerializer, ContributorSerializer, IssueSerializer
-from .permissions import ProjectPermissions, ContributorPermissions, IssuePermissions
+from .models import Project, Contributor, Issue, Comment
+from .serializers import (
+    ProjectSerializer,
+    ContributorSerializer,
+    IssueSerializer,
+    CommentSerializer,
+)
+from .permissions import (
+    ProjectPermissions,
+    ContributorPermissions,
+    IssuePermissions,
+    CommentPermissions,
+)
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -22,15 +32,16 @@ class ContributorViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, ContributorPermissions]
     http_method_names = ["get", "post", "delete"]
 
-    def get_queryset(self):
+    def initial(self, request, *args, **kwargs):
         self.project = get_object_or_404(Project, id=self.kwargs["project_pk"])
+        return super().initial(request, *args, **kwargs)
+
+    def get_queryset(self):
         return Contributor.objects.filter(project=self.project)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        querySet = self.get_queryset()
         context["project"] = self.project
-        context["querySet"] = querySet
         return context
 
     def destroy(self, request, *args, **kwargs):
@@ -53,16 +64,42 @@ class IssueViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IssuePermissions]
     http_method_names = ["get", "post", "put", "delete"]
 
-    def get_queryset(self):
+    def initial(self, request, *args, **kwargs):
         self.project = get_object_or_404(Project, id=self.kwargs["project_pk"])
+        return super().initial(request, *args, **kwargs)
+
+    def get_queryset(self):
         return Issue.objects.filter(project=self.project)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        querySet = self.get_queryset()
         context["project"] = self.project
-        context["querySet"] = querySet
         return context
 
-    # reste à faire la suppression d'une issue
-    # travailler les permissions
+    def destroy(self, request, *args, **kwargs):
+        issue = get_object_or_404(Issue, id=self.kwargs["pk"])
+        issue.delete()
+        return Response(
+            {"detail": "Issue successfully deleted !"},
+            status=status.HTTP_202_ACCEPTED,
+        )
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated, CommentPermissions]
+    http_method_names = ["get", "post", "put", "delete"]
+
+    def initial(self, request, *args, **kwargs):
+        self.issue = get_object_or_404(
+            Issue, id=self.kwargs["issue_pk"], project=self.kwargs["project_pk"]
+        )
+        return super().initial(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return Comment.objects.filter(issue=self.issue)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["issue"] = self.issue
+        return context
