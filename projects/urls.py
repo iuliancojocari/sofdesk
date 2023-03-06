@@ -24,7 +24,7 @@ contributor_router.register(r"users", ContributorViewSet, basename="contributors
 issue_router = routers.NestedDefaultRouter(router, r"projects", lookup="project")
 issue_router.register(r"issues", IssueViewSet, basename="issues")
 
-# Router base on the issue router -> issues
+# Router based on the issue router -> issues
 # Generate the endpoints below (plus the issue endpoints)
 # /projects/:project_id/issues/:issue_id/comments/
 # /projects/:project_id/issues/:issue_id/comments/:comment_id/

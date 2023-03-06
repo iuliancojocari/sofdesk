@@ -9,7 +9,7 @@ class ProjectPermissions(permissions.BasePermission):
             return Project.objects.filter(
                 contributor_project__user=request.user
             ).exists()
-        return Project.objects.filter(author=request.user).exists()
+        return Project.objects.filter(author=request.user).exists() or True
 
 
 class ContributorPermissions(permissions.BasePermission):
@@ -27,7 +27,7 @@ class IssuePermissions(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return Project.objects.filter(
-                id=view.kwargs["project_pk"], project_concerned__author=request.user
+                id=view.kwargs["project_pk"], contributor_project__user=request.user
             ).exists()
         return Project.objects.filter(
             id=view.kwargs["project_pk"], author=request.user
@@ -40,7 +40,9 @@ class CommentPermissions(permissions.BasePermission):
             return Project.objects.filter(
                 id=view.kwargs["project_pk"], contributor_project__user=request.user
             ).exists()
-        return Issue.objects.filter(
-            id=view.kwargs["issue_pk"],
-            issue_comment__author=request.user,
+        elif request.method == "POST":
+            return Project.objects.filter(id=view.kwargs["project_pk"], contributor_project__user=request.user).exists()
+        return Project.objects.filter(
+            id=view.kwargs["project_pk"],
+            project_concerned__author=request.user,
         ).exists()

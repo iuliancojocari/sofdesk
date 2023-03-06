@@ -25,6 +25,14 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Project.objects.filter(contributor_project__user=self.request.user)
+    
+    def destroy(self, request, *args, **kwargs):
+        project = get_object_or_404(Project, id=self.kwargs["pk"])
+        project.delete()
+        return Response(
+            {"detail": "Project successfully deleted !"},
+            status=status.HTTP_202_ACCEPTED,
+        )
 
 
 class ContributorViewSet(viewsets.ModelViewSet):
@@ -45,7 +53,7 @@ class ContributorViewSet(viewsets.ModelViewSet):
         return context
 
     def destroy(self, request, *args, **kwargs):
-        contributor = get_object_or_404(Contributor, user=self.kwargs["pk"])
+        contributor = get_object_or_404(Contributor, project=self.kwargs["project_pk"], user=self.kwargs["pk"])
         if contributor.role == "AUTHOR":
             return Response(
                 {"detail": "Project author cannot be deleted !"},
