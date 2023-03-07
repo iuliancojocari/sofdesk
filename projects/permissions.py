@@ -41,7 +41,9 @@ class CommentPermissions(permissions.BasePermission):
                 id=view.kwargs["project_pk"], contributor_project__user=request.user
             ).exists()
         elif request.method == "POST":
-            return Project.objects.filter(id=view.kwargs["project_pk"], contributor_project__user=request.user).exists()
+            return Project.objects.filter(
+                id=view.kwargs["project_pk"], contributor_project__user=request.user
+            ).exists()
         return Project.objects.filter(
             id=view.kwargs["project_pk"],
             project_concerned__author=request.user,
