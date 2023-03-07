@@ -6,7 +6,7 @@ Developpement d'une application permettant de remonter et suivre des problèmes 
 
 L'API Softdesk permet aux utilisateurs de créer des projets, d'ajouter des contributeurs aux projets, de créer des problèmes et des commentaires.
 
-Pour plus de détails sur le fonctionnement de cette API, se référer à cette [documentation](lien_vers_documentation) (Postman).
+Pour plus de détails sur le fonctionnement de cette API, se référer à cette [documentation](https://documenter.getpostman.com/view/15044832/2s93JoymZ5) (Postman).
 
 ## Pré-requis
     - Python >= 3.11.1
@@ -63,7 +63,7 @@ Pour naviguer dans l'API vous pouvez utiliser différents outils, comme :
 | 2    | utilisateur_2 |   Azerty1234   |
 | 3    | utilisateur_3 |   Azerty1234   |
 
-#### Liste des points de terminaison de l'API ([documentation](lien_postman_documentation)) :
+#### Liste des points de terminaison de l'API ([documentation](https://documenter.getpostman.com/view/15044832/2s93JoymZ5)) :
 
 | #   | *Point de terminaison d'API*                                              | *Méthode HTTP* | *URL (par défaut: http://127.0.0.1:8000)*       |
 |-----|---------------------------------------------------------------------------|----------------|-------------------------------------------|
