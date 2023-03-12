@@ -57,11 +57,11 @@ Pour naviguer dans l'API vous pouvez utiliser différents outils, comme :
 
 #### Liste des utilisateurs existants :
 
-| *ID* | *Identifiant* | *Mot de passe* |
-|------|---------------|----------------|
-| 1    | utilisateur_1 |   Azerty1234   |
-| 2    | utilisateur_2 |   Azerty1234   |
-| 3    | utilisateur_3 |   Azerty1234   |
+| *ID* |       *Identifiant*      | *Mot de passe* |
+|------|--------------------------|----------------|
+| 1    | utilisateur1@exemple.com |   Azerty1234   |
+| 2    | utilisateur2@exemple.com |   Azerty1234   |
+| 3    | utilisateur3@exemple.com |   Azerty1234   |
 
 #### Liste des points de terminaison de l'API ([documentation](https://documenter.getpostman.com/view/15044832/2s93JoymZ5)) :
 
